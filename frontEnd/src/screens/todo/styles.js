@@ -35,12 +35,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.DARK,
     borderRadius: 10,
     marginBottom: 10,
+    justifyContent: 'space-between',
   },
   textTodo: {
     fontSize: 16,
     fontWeight: 'bold',
     color: Colors.LIGHT,
     marginLeft: 10,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    position: 'relative',
+    transition: 'all 0.5s ease',
   },
 });
 

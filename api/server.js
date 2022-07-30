@@ -2,14 +2,19 @@ const express = require("express");
 const app = express(); // create express app
 const cors = require("cors");
 const mongoose = require("mongoose");
-const port = 3000;
+const port = 5001; // default port to listen
 const bodyParser = require("body-parser");
 const UserModel = require("./src/models/Users");
 const TodoModel = require("./src/models/Todos");
 
+// app.use(function (req, res, next) {
+//   res.header("Content-Type", "application/json");
+//   next();
+// });
+
+// app.set("json spaces", 40);
 app.use(cors());
 app.use(express.json());
-app.use(cors());
 // middleware to parse the body of the request
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -47,10 +52,10 @@ app.get("/users", (req, res) => {
 app.get("/todos", async (req, res) => {
   TodoModel.find({})
     .then((todos) => {
-      res.send(todos);
+      res.json(todos);
     })
     .catch((err) => {
-      res.send(err);
+      res.json(err);
     });
 });
 
@@ -154,7 +159,3 @@ app.post("/upload", (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
-// localhost:3000/users
-
-// Toggle between complete and incomplete todos

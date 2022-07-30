@@ -1,0 +1,8 @@
+
+ GET axios.get('http://localhost:3000/todos')
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });

@@ -6,21 +6,43 @@ import {
   useColorScheme,
   TextInput,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Colors from './Colors';
 import styles from './styles';
-import Todo from '../../components/ultis/todo';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+// import Todo from '../../components/ultis/todo';
 import axios from 'axios';
 
 const TodoScreen = () => {
   console.log(Colors);
+  const [data, setData] = useState([]);
+  const [todos, setTodos] = useState('');
+  const [showIcon, setShowIcon] = useState(false);
+  console.log(data);
+
   useEffect(() => {
-    const url = 'https://jsonplaceholder.typicode.com/todos';
-    axios.get(url).then(res => {
-      console.log('res', res);
-    });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    axios
+      .get('http://192.168.100.21:5001/todos')
+      .then(res => {
+        setData(res.data);
+      })
+      .catch(err => {
+        console.log('ERROR', err);
+      });
+  };
+
+  const showIcons = () => {
+    setShowIcon(!showIcon);
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -63,10 +85,40 @@ const TodoScreen = () => {
           }}>
           <Text style={styles.text}>Your Tasks</Text>
         </View>
-        <View style={styles.todoContainer}>
-          <Text style={styles.textTodo}>Task 1</Text>
-        </View>
-        <Todo />
+        <FlatList
+          data={data}
+          renderItem={({item}) => (
+            <TouchableOpacity onPress={() => showIcons()}>
+              <View style={styles.todoContainer}>
+                <Text style={styles.textTodo}>{item.title}</Text>
+                <View
+                  style={[
+                    styles.iconContainer,
+                    {
+                      display: showIcon ? 'flex' : 'none',
+                    },
+                  ]}>
+                  <TouchableOpacity
+                    style={{
+                      marginRight: 5,
+                    }}>
+                    <Feather name="trash" size={18} color={'red'} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      marginRight: 5,
+                    }}>
+                    <Feather name="edit" size={18} color={Colors.LIGHT} />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <MaterialIcons name="done" size={20} color={'green'} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+        {/* <Todo /> */}
       </View>
     </SafeAreaView>
   );
