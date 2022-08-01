@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   Text,
   StatusBar,
-  useColorScheme,
   TextInput,
   TouchableOpacity,
   FlatList,
@@ -11,22 +10,19 @@ import {
 import React, {useEffect, useState} from 'react';
 import Colors from './Colors';
 import styles from './styles';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// import Todo from '../../components/ultis/todo';
+import TodoItem from '../../components/todoItem/TodoItem';
 import axios from 'axios';
 
 const TodoScreen = () => {
-  console.log(Colors);
+  // console.log(Colors);
   const [data, setData] = useState([]);
   const [todos, setTodos] = useState('');
-  const [showIcon, setShowIcon] = useState(false);
-  console.log(data);
+  console.log('DATA', todos);
+  // console.log(data);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [data]);
 
   const fetchData = async () => {
     axios
@@ -38,10 +34,63 @@ const TodoScreen = () => {
         console.log('ERROR', err);
       });
   };
-
-  const showIcons = () => {
-    setShowIcon(!showIcon);
+  // render Item
+  const renderTodo = ({item}) => {
+    return <TodoItem item={item} />;
   };
+
+  // Add Todo in MongoDB
+  // const addTodo = () => {
+  //   axios
+  //     .post('http://192.168.100.21:5001/todos/new').
+  //     .then(res => {
+  //       console.log(res)
+  //       setTodos(
+  //         [...todos, data]
+  //       )
+  //       console.log('RESPONSE', res);
+  //       fetchData();
+  //     })
+  //     .catch(err => {
+  //       console.log('ERROR', err);
+  //     });
+  // };
+
+  const addTodo = () => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    var raw = JSON.stringify({
+      title: todos,
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    };
+
+    fetch('http://192.168.100.21:5001/todos/new', requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  };
+
+  // const addTodo = async () => {
+  //   const data = await fetch('http://192.168.100.21:5001/todos/new', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       title: {todos},
+  //       completed: false,
+  //     }),
+  //   }).then(res => res.json());
+
+  //   setTodos([...todos, data]);
+  // };
 
   return (
     <SafeAreaView
@@ -68,14 +117,20 @@ const TodoScreen = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <TextInput style={styles.textInput} placeholder="Enter your task" />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter your task"
+            value={todos}
+            onChangeText={setTodos}
+          />
           <TouchableOpacity
             style={{
               backgroundColor: Colors.PRIMARY,
               justifyContent: 'center',
               borderRadius: 10,
               padding: 10,
-            }}>
+            }}
+            onPress={() => addTodo()}>
             <Text style={{color: Colors.LIGHT}}>Add</Text>
           </TouchableOpacity>
         </View>
@@ -85,39 +140,7 @@ const TodoScreen = () => {
           }}>
           <Text style={styles.text}>Your Tasks</Text>
         </View>
-        <FlatList
-          data={data}
-          renderItem={({item}) => (
-            <TouchableOpacity onPress={() => showIcons()}>
-              <View style={styles.todoContainer}>
-                <Text style={styles.textTodo}>{item.title}</Text>
-                <View
-                  style={[
-                    styles.iconContainer,
-                    {
-                      display: showIcon ? 'flex' : 'none',
-                    },
-                  ]}>
-                  <TouchableOpacity
-                    style={{
-                      marginRight: 5,
-                    }}>
-                    <Feather name="trash" size={18} color={'red'} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      marginRight: 5,
-                    }}>
-                    <Feather name="edit" size={18} color={Colors.LIGHT} />
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <MaterialIcons name="done" size={20} color={'green'} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+        <FlatList data={data} renderItem={renderTodo} />
         {/* <Todo /> */}
       </View>
     </SafeAreaView>
