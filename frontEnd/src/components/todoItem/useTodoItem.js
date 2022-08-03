@@ -1,13 +1,20 @@
 import {View, Text} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 const useTodoItem = () => {
   const [showIcon, setShowIcon] = useState(false);
   const [data, setData] = useState([]);
   const [todos, setTodos] = useState('');
+  console.log('DATA', todos);
+  const [isUpdate, setIsUpdate] = useState(false);
+  console.log('UPDATE', isUpdate);
 
   // console.log('DATA', data);
+
+  useEffect(() => {
+    console.log('DATA', todos);
+  }, [todos]);
 
   const fetchData = async () => {
     axios
@@ -23,7 +30,6 @@ const useTodoItem = () => {
   const showIcons = () => {
     return setShowIcon(!showIcon);
   };
-
   const addTodo = async () => {
     const data = await fetch('http://192.168.100.21:5001/todos/new', {
       method: 'POST',
@@ -39,8 +45,33 @@ const useTodoItem = () => {
     setTodos([...todos, data]);
     fetchData();
   };
-  const updateTodo = () => {
-    return console.log('updateTodo');
+  const updateTodo = async item => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    var raw = JSON.stringify({
+      title: todos,
+    });
+
+    var requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    };
+
+    fetch('http://192.168.100.21:5001/todos/update/' + id, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  };
+
+  const editTodo = async item => {
+    console.log('EDIT', item.title);
+
+    setTodos(item.title);
+    console.log('EDIT', setTodos);
+    setIsUpdate(true);
   };
 
   const deleteTodo = async item => {
@@ -85,6 +116,9 @@ const useTodoItem = () => {
     todos,
     setTodos,
     addTodo,
+    isUpdate,
+    setIsUpdate,
+    editTodo,
   };
 };
 

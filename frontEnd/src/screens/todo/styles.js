@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   textInput: {
-    width: '85%',
+    width: '80%',
     borderWidth: 1,
     borderRadius: 20,
     padding: 10,

@@ -17,14 +17,15 @@ import axios from 'axios';
 import useTodoItem from '../../components/todoItem/useTodoItem';
 
 const TodoScreen = () => {
-  const {data, setData, fetchData, todos, setTodos, addTodo} = useTodoItem();
+  const {data, fetchData, todos, setTodos, addTodo, isUpdate, updateTodo} =
+    useTodoItem();
   // console.log(Colors);
   // console.log('DATA', todos);
   // console.log(data);
 
   useEffect(() => {
     fetchData();
-  }, [data]);
+  }, []);
 
   // render Item
   const renderTodo = ({item}) => {
@@ -64,16 +65,30 @@ const TodoScreen = () => {
             value={todos}
             onChangeText={setTodos}
           />
-          <TouchableOpacity
-            style={{
-              backgroundColor: Colors.PRIMARY,
-              justifyContent: 'center',
-              borderRadius: 10,
-              padding: 10,
-            }}
-            onPress={() => addTodo()}>
-            <Text style={{color: Colors.LIGHT}}>Add</Text>
-          </TouchableOpacity>
+
+          {isUpdate ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: Colors.PRIMARY,
+                justifyContent: 'center',
+                borderRadius: 10,
+                padding: 10,
+              }}
+              onPress={() => updateTodo()}>
+              <Text style={{color: Colors.LIGHT}}>Update</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={{
+                backgroundColor: Colors.PRIMARY,
+                justifyContent: 'center',
+                borderRadius: 10,
+                padding: 10,
+              }}
+              onPress={() => addTodo()}>
+              <Text style={{color: Colors.LIGHT}}>Add</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View
           style={{

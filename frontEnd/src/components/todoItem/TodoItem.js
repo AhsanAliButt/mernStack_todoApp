@@ -8,7 +8,7 @@ import useTodoItem from './useTodoItem';
 
 const TodoItem = ({item}) => {
   // console.log('COLORS in TodoItem', Colors);
-  const {updateTodo, deleteTodo, completeTodo, showIcons, showIcon} =
+  const {updateTodo, deleteTodo, completeTodo, showIcons, showIcon, editTodo} =
     useTodoItem();
 
   // console.log('ITEM', showIcons);
@@ -49,7 +49,7 @@ const TodoItem = ({item}) => {
             style={{
               marginRight: 5,
             }}
-            onPress={() => updateTodo(item)}>
+            onPress={() => editTodo(item)}>
             <Feather name="edit" size={18} color={Colors.LIGHT} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => completeTodo(item)}>
