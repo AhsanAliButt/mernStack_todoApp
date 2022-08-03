@@ -31,6 +31,12 @@ const styles = StyleSheet.create({
     color: Colors.LIGHT,
     marginLeft: 10,
   },
+  completeText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.LIGHT,
+    marginLeft: 10,
+  },
 });
 
 export default styles;

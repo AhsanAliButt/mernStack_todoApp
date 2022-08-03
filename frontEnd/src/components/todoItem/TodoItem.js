@@ -17,7 +17,25 @@ const TodoItem = ({item}) => {
   return (
     <TouchableOpacity onPress={showIcons}>
       <View style={styles.todoContainer}>
-        <Text style={styles.textTodo}>{item.title}</Text>
+        {item.completed === true ? (
+          <View>
+            <Text
+              style={[
+                styles.completeText,
+                {
+                  textDecorationLine: 'line-through',
+                  textDecorationStyle: 'solid',
+                  textDecorationColor: Colors.DARK,
+                },
+              ]}>
+              {item.title}
+            </Text>
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.textTodo}>{item.title}</Text>
+          </View>
+        )}
         <View
           style={showIcon ? styles.onPressIconContainer : styles.iconContainer}>
           <TouchableOpacity
